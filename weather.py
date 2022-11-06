@@ -6,8 +6,7 @@ from tkinter import ttk
 
 def update(*args):
     try:
-        value = float(feet.get())
-        meters.set(int(0.3048 * value * 10000.0 + 0.5)/10000.0)
+        current_weather.set("current weather")
     except ValueError:
         pass
 
@@ -15,28 +14,17 @@ def update(*args):
 root = Tk()
 root.title("Weather")
 
-mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
-feet = StringVar()
-feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
-feet_entry.grid(column=2, row=1, sticky=(N, E))
+button = ttk.Button(root, text="Get Weather", command="update")
+button.grid()
 
-meters = StringVar()
-ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(W, E))
 
-ttk.Button(mainframe, text="Update", command=update).grid(column=3, row=3, sticky=W)
+current_weather = StringVar()
+current_weather_label = ttk.Label(root, textvariable=current_weather)
+current_weather_label.grid()
 
-ttk.Label(mainframe, text="feet").grid(column=3, row=1, sticky=W)
-ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=2, sticky=E)
-ttk.Label(mainframe, text="meters").grid(column=3, row=2, sticky=W)
-
-for child in mainframe.winfo_children():
-    child.grid_configure(padx=5, pady=5)
-
-feet_entry.focus()
 root.bind("<Return>", update)
 
 root.geometry("800x480")
