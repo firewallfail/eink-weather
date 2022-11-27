@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import datetime
 
 from tkinter import *
 from tkinter import ttk
@@ -17,7 +18,13 @@ def get_sun_stats():
     sun_rise = results['sunrise']
     sun_set = results['sunset']
 
-    return
+    current_time = datetime.datetime.now()
+    midnight = (current_time + datetime.timedelta(days=1)).replace(hour=0, minute=0)
+    next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
+
+    window.after(next_update, get_sun_stats) # once per day
+
+    return sun_rise, sun_set
 # sleep for 3600 in main loop
 # if time between 00:00 and 2:00 grab sun_api
 # every hour update weather
@@ -29,6 +36,8 @@ window.rowconfigure(1, weight=1)
 window.columnconfigure(0, weight=1)
 window.columnconfigure(1, weight=1)
 window.columnconfigure(2, weight=1)
+
+sun_rise, sun_set = get_sun_stats()
 
 
 current_weather = ttk.Label(window, text="Current Weather")
@@ -46,8 +55,20 @@ date.grid(row=1, column=0, sticky=N)
 unknown = ttk.Label(window, text="Undecided")
 unknown.grid(row=1, column=1, sticky=N)
 
-sunrise = ttk.Label(window, text=sun_rise)
-sunrise.grid(row=1, column=2, sticky=N)
+
+sun_stats = ttk.Label(window, text="Rise and set")
+sun_stats.rowconfigure(0, weight=1)
+sun_stats.rowconfigure(1, weight=1)
+sun_stats.columnconfigure(0, weight=1)
+sun_stats.columnconfigure(1, weight=1)
+sun_stats.columnconfigure(2, weight=1)
+sun_stats.grid(row=1, column=2, sticky=N)
+
+sunrise = ttk.Label(sun_stats, text=sun_set)
+sunrise.grid(row=1, column=1, sticky=N)
+sunset = ttk.Label(sun_stats, text=sun_set)
+sunrise.grid(row=1, column=1, sticky=N)
+
 
 window.geometry("800x480")
 window.mainloop()
