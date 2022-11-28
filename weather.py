@@ -2,10 +2,10 @@ import requests
 import json
 import time
 
-from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, Tk, N, S, E, W
 from dateutil import tz
 from datetime import datetime, timedelta
+from random import randint
 
 
 def time_to_local(time):
@@ -16,7 +16,7 @@ def time_to_local(time):
     utc = utc.replace(tzinfo=from_zone)
     local = utc.astimezone(to_zone)
 
-    return local
+    return local.strftime('%I:%M:%S %p')
 
 
 def get_sun_stats():
@@ -25,13 +25,17 @@ def get_sun_stats():
     # temp hardcode time to stop hitting api needlessly
     # sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
     # r = requests.get(sun_api).json()
-    r = {
-        'results': {
+    r = [
+        {'results': {
             'sunrise': '10:00:00 AM',
             'sunset': '11:00:00 PM'
-        }
-    }
-    results = r['results']
+        }},
+         {'results': {
+            'sunrise': '09:00:00 AM',
+            'sunset': '09:00:00 PM'
+        }}]
+    rand = randint(0, 1)
+    results = r[rand]['results']
     sun_rise = time_to_local(results['sunrise'])
     sun_set = time_to_local(results['sunset'])
 
@@ -39,13 +43,9 @@ def get_sun_stats():
     midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
     next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
 
-    window.after(next_update, get_sun_stats) # once per day
+    window.after(1000, get_sun_stats) # once per day
 
     return sun_rise, sun_set
-# sleep for 3600 in main loop
-# if time between 00:00 and 2:00 grab sun_api
-# every hour update weather
-# time.sleep(3600)
 
 window = Tk()
 window.rowconfigure(0, weight=1)
