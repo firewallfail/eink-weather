@@ -19,25 +19,8 @@ def time_to_local(time):
     return local.strftime('%I:%M:%S %p')
 
 
-def get_sun_stats():
+def draw_sun_stats(next_update, sun_rise, sun_set):
     sun_stats = ttk.Frame(window)
-    
-    lat = 42.984924
-    lng = -81.245277
-
-    sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
-    results = requests.get(sun_api).json().get('results', None)
-
-    if not results:
-        return False
-
-    sun_rise = time_to_local(results['sunrise'])
-    sun_set = time_to_local(results['sunset'])
-
-    current_time = datetime.now()
-    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
-    next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
-
     sun_stats.grid(row=1, column=2)
 
     sunrise = ttk.Label(sun_stats, text=sun_rise)
@@ -46,6 +29,28 @@ def get_sun_stats():
     sunset.grid(row=1, column=1, sticky=N)
 
     window.after(next_update, get_sun_stats) # once per day
+
+
+def get_sun_stats():
+    
+    lat = 42.984924
+    lng = -81.245277
+
+    sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
+    results = requests.get(sun_api).json().get('results', None)
+
+    if not results:
+        thirty_mins_in_ms = 30 * 60 * 1000
+        draw_sun_stats(thirty_mins_in_ms, 'Error', 'Other Error')
+        return False
+
+    sun_rise = time_to_local(results['sunrise'])
+    sun_set = time_to_local(results['sunset'])
+
+    current_time = datetime.now()
+    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
+    next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
+    draw_sun_stats(next_update, sun_rise, sun_set)
 
     return True
 
