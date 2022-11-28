@@ -20,22 +20,15 @@ def time_to_local(time):
 
 
 def get_sun_stats():
+    sun_stats = ttk.Frame(window)
+    # frame might have to be in here
     lat = 42.984924
     lng = -81.245277
-    # temp hardcode time to stop hitting api needlessly
-    # sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
-    # r = requests.get(sun_api).json()
-    r = [
-        {'results': {
-            'sunrise': '10:00:00 AM',
-            'sunset': '11:00:00 PM'
-        }},
-         {'results': {
-            'sunrise': '09:00:00 AM',
-            'sunset': '09:00:00 PM'
-        }}]
-    rand = randint(0, 1)
-    results = r[rand]['results']
+
+    sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
+    r = requests.get(sun_api).json()
+
+    results = r['results']
     sun_rise = time_to_local(results['sunrise'])
     sun_set = time_to_local(results['sunset'])
 
@@ -43,7 +36,14 @@ def get_sun_stats():
     midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
     next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
 
-    window.after(1000, get_sun_stats) # once per day
+    sun_stats.grid(row=1, column=2)
+
+    sunrise = ttk.Label(sun_stats, text=sun_rise)
+    sunrise.grid(row=0, column=1, sticky=N)
+    sunset = ttk.Label(sun_stats, text=sun_set)
+    sunset.grid(row=1, column=1, sticky=N)
+
+    window.after(next_update, get_sun_stats) # once per day
 
     return sun_rise, sun_set
 
@@ -54,7 +54,7 @@ window.columnconfigure(0, weight=1)
 window.columnconfigure(1, weight=1)
 window.columnconfigure(2, weight=1)
 
-sun_rise, sun_set = get_sun_stats()
+
 
 
 current_weather = ttk.Label(window, text="Current Weather")
@@ -72,14 +72,7 @@ date.grid(row=1, column=0, sticky=N)
 unknown = ttk.Label(window, text="Undecided")
 unknown.grid(row=1, column=1, sticky=N)
 
-
-sun_stats = ttk.Frame(window)
-sun_stats.grid(row=1, column=2)
-
-sunrise = ttk.Label(sun_stats, text=sun_set)
-sunrise.grid(row=0, column=1, sticky=N)
-sunset = ttk.Label(sun_stats, text=sun_set)
-sunrise.grid(row=1, column=1, sticky=N)
+get_sun_stats()
 
 
 window.geometry("800x480")
