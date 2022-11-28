@@ -21,14 +21,16 @@ def time_to_local(time):
 
 def get_sun_stats():
     sun_stats = ttk.Frame(window)
-    # frame might have to be in here
+    
     lat = 42.984924
     lng = -81.245277
 
     sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
-    r = requests.get(sun_api).json()
+    results = requests.get(sun_api).json().get('results', None)
 
-    results = r['results']
+    if not results:
+        return False
+
     sun_rise = time_to_local(results['sunrise'])
     sun_set = time_to_local(results['sunset'])
 
@@ -45,7 +47,7 @@ def get_sun_stats():
 
     window.after(next_update, get_sun_stats) # once per day
 
-    return sun_rise, sun_set
+    return True
 
 window = Tk()
 window.rowconfigure(0, weight=1)
