@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import constants as CONS
 
 from tkinter import ttk, Tk, N, S, E, W
 from dateutil import tz
@@ -23,9 +24,9 @@ def draw_sun_stats(next_update, sun_rise, sun_set):
     sun_stats = ttk.Frame(window)
     sun_stats.grid(row=1, column=2)
 
-    sunrise = ttk.Label(sun_stats, text=sun_rise)
+    sunrise = ttk.Label(sun_stats, text=f'Sun Rise: {sun_rise}')
     sunrise.grid(row=0, column=1, sticky=N)
-    sunset = ttk.Label(sun_stats, text=sun_set)
+    sunset = ttk.Label(sun_stats, text=f'Sun Set: {sun_set}')
     sunset.grid(row=1, column=1, sticky=N)
 
     window.after(next_update, get_sun_stats) # once per day
@@ -54,6 +55,45 @@ def get_sun_stats():
 
     return True
 
+
+def get_date_stats():
+    current_time = datetime.now()
+    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
+    next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
+    date = {
+        'weekday': CONS.WEEKDAYS[datetime.today().weekday()],
+        'month': CONS.MONTHS[datetime.today().month - 1],
+        'day': datetime.today().day,
+        'year': datetime.today().year
+    }
+    draw_date_tile(next_update, date)
+
+
+def draw_date_tile(next_update, datestamp):
+    date = ttk.Frame(window)
+    date.grid(row=1, column=0)
+    title = ttk.Label(date, text="Date")
+    title.grid(row=0, column=0)
+    weekday = ttk.Label(date, text=datestamp['weekday'])
+    weekday.grid(row=1, column=0)
+    month = ttk.Label(date, text=datestamp['month'])
+    month.grid(row=2, column=0)
+    day = ttk.Label(date, text=datestamp['day'])
+    day.grid(row=3, column=0)
+    year = ttk.Label(date, text=datestamp['year'])
+    year.grid(row=4, column=0)
+
+    window.after(next_update, get_date_stats) # once per day
+
+
+def draw_weather_tiles():
+    return
+
+
+def get_weather_stats():
+    return
+
+
 window = Tk()
 window.rowconfigure(0, weight=1)
 window.rowconfigure(1, weight=1)
@@ -73,8 +113,7 @@ next_hour.grid(row=0, column=1, sticky=N)
 tomorrow_weather = ttk.Label(window, text="Tomorrows Weather")
 tomorrow_weather.grid(row=0, column=2, sticky=N)
 
-date = ttk.Label(window, text="Date")
-date.grid(row=1, column=0, sticky=N)
+get_date_stats()
 
 unknown = ttk.Label(window, text="Undecided")
 unknown.grid(row=1, column=1, sticky=N)
