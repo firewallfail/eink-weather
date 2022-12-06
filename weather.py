@@ -33,11 +33,7 @@ def draw_sun_stats(next_update, sun_rise, sun_set):
 
 
 def get_sun_stats():
-    
-    lat = 42.984924
-    lng = -81.245277
-
-    sun_api = f'https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}'
+    sun_api = f'https://api.sunrise-sunset.org/json?lat={CONS.LAT}&lng={CONS.LNG}'
     results = requests.get(sun_api).json().get('results', None)
 
     if not results:
@@ -86,11 +82,12 @@ def draw_date_tile(next_update, datestamp):
     window.after(next_update, get_date_stats) # once per day
 
 
-def draw_weather_tiles():
+def get_weather_stats():
+    weather_api = f'https://api.open-meteo.com/v1/forecast?latitude={CONS.LAT}&longitude={CONS.LNG}&hourly=temperature_2m,precipitation,weathercode&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum&timezone=auto'
     return
 
 
-def get_weather_stats():
+def draw_weather_tiles():
     return
 
 
