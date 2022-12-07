@@ -20,6 +20,12 @@ def time_to_local(time):
     return local.strftime('%I:%M:%S %p')
 
 
+def time_to_midnight():
+    current_time = datetime.now()
+    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
+    return ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
+
+
 def draw_sun_stats(next_update, sun_rise, sun_set):
     sun_stats = ttk.Frame(window)
     sun_stats.grid(row=1, column=2)
@@ -33,8 +39,7 @@ def draw_sun_stats(next_update, sun_rise, sun_set):
 
 
 def get_sun_stats():
-    sun_api = f'https://api.sunrise-sunset.org/json?lat={CONS.LAT}&lng={CONS.LNG}'
-    results = requests.get(sun_api).json().get('results', None)
+    results = requests.get(CONS.SUN_API).json().get('results', None)
 
     if not results:
         thirty_mins_in_ms = 30 * 60 * 1000
@@ -44,24 +49,18 @@ def get_sun_stats():
     sun_rise = time_to_local(results['sunrise'])
     sun_set = time_to_local(results['sunset'])
 
-    current_time = datetime.now()
-    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
-    next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
+    next_update = time_to_midnight()
     draw_sun_stats(next_update, sun_rise, sun_set)
-
-    return True
 
 
 def get_date_stats():
-    current_time = datetime.now()
-    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0)
-    next_update = ((midnight - current_time).seconds) * 1000 # ms until next update after midnight
     date = {
         'weekday': CONS.WEEKDAYS[datetime.today().weekday()],
         'month': CONS.MONTHS[datetime.today().month - 1],
         'day': datetime.today().day,
         'year': datetime.today().year
     }
+    next_update = time_to_midnight()
     draw_date_tile(next_update, date)
 
 
@@ -82,15 +81,70 @@ def draw_date_tile(next_update, datestamp):
     window.after(next_update, get_date_stats) # once per day
 
 
-def get_weather_stats():
-    weather_api = f'https://api.open-meteo.com/v1/forecast?latitude={CONS.LAT}&longitude={CONS.LNG}&hourly=temperature_2m,precipitation,weathercode&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum&timezone=auto'
-    return
+def get_weather_forecast():
+    results = requests.get(CONS.WEATHER_FORECAST_API).json().get('daily', None)
+    today_forecast = {
+        'temp_high': results.get('temperature_2m_max')[0],
+        'temp_low': results.get('temperature_2m_min')[0],
+        'precip_sum': results.get('precipitation_sum')[0],
+        'weather_code': results.get('weathercode')[0]
+    }
+    tomorrow_forecast = {
+        'temp_high': results.get('temperature_2m_max')[1],
+        'temp_low': results.get('temperature_2m_min')[1],
+        'precip_sum': results.get('precipitation_sum')[1],
+        'weather_code': results.get('weathercode')[1]
+    }
+    next_update = time_to_midnight()
+    draw_forecast_tiles(next_update, today_forecast, tomorrow_forecast)
 
 
-def draw_weather_tiles():
-    return
+def draw_forecast_tiles(next_update, today_forecast, tomorrow_forecast):
+    draw_today_forecast(today_forecast)
+    draw_tomorrow_forecast(tomorrow_forecast)
+    window.after(next_update, get_weather_forecast) # once per day
 
 
+def draw_today_forecast(today_forecast):
+    today_tile = ttk.Frame(window)
+    today_tile.grid(row=0, column=1)
+
+    title = ttk.Label(today_tile, text='Today Forecast')
+    title.grid(row=0, column=0)
+
+    temp_high = ttk.Label(today_tile, text=f"High: {today_forecast['temp_high']}°C")
+    temp_high.grid(row=1, column=0)
+
+    temp_low = ttk.Label(today_tile, text=f"Low: {today_forecast['temp_low']}°C")
+    temp_low.grid(row=2, column=0)
+
+    precip_sum = ttk.Label(today_tile, text=f"Precip: {today_forecast['precip_sum']}mm")
+    precip_sum.grid(row=3, column=0)
+
+    weather_code = ttk.Label(today_tile, text=f"{CONS.WEATHER_CODE[today_forecast['weather_code']]}")
+    weather_code.grid(row=4, column=0)
+
+
+def draw_tomorrow_forecast(tomorrow_forecast):
+    tomorrow_tile = ttk.Frame(window)
+    tomorrow_tile.grid(row=0, column=2)
+
+    title = ttk.Label(tomorrow_tile, text='Tomorrow Forecast')
+    title.grid(row=0, column=0)
+
+    temp_high = ttk.Label(tomorrow_tile, text=f"High: {tomorrow_forecast['temp_high']}°C")
+    temp_high.grid(row=1, column=0)
+
+    temp_low = ttk.Label(tomorrow_tile, text=f"Low: {tomorrow_forecast['temp_low']}°C")
+    temp_low.grid(row=2, column=0)
+
+    precip_sum = ttk.Label(tomorrow_tile, text=f"Precip: {tomorrow_forecast['precip_sum']}mm")
+    precip_sum.grid(row=3, column=0)
+
+    weather_code = ttk.Label(tomorrow_tile, text=f"{CONS.WEATHER_CODE[tomorrow_forecast['weather_code']]}")
+    weather_code.grid(row=4, column=0)
+
+      
 window = Tk()
 window.rowconfigure(0, weight=1)
 window.rowconfigure(1, weight=1)
@@ -98,17 +152,10 @@ window.columnconfigure(0, weight=1)
 window.columnconfigure(1, weight=1)
 window.columnconfigure(2, weight=1)
 
-
-
-
 current_weather = ttk.Label(window, text="Current Weather")
 current_weather.grid(row=0, column=0, sticky=N)
 
-next_hour = ttk.Label(window, text="Next Hour")
-next_hour.grid(row=0, column=1, sticky=N)
-
-tomorrow_weather = ttk.Label(window, text="Tomorrows Weather")
-tomorrow_weather.grid(row=0, column=2, sticky=N)
+get_weather_forecast()
 
 get_date_stats()
 
@@ -116,7 +163,6 @@ unknown = ttk.Label(window, text="Undecided")
 unknown.grid(row=1, column=1, sticky=N)
 
 get_sun_stats()
-
 
 window.geometry("800x480")
 window.mainloop()
