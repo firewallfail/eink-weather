@@ -34,3 +34,4 @@ WEATHER_CODE = {
 SUN_API = f'https://api.sunrise-sunset.org/json?lat={LAT}&lng={LNG}'
 WEATHER_FORECAST_API = f'https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LNG}&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum&timezone=America%2FNew_York'
 CURRENT_WEATHER_API = f'https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LNG}&current_weather=true&timezone=America%2FNew_York'
+QUOTES_API = 'https://zenquotes.io/api/today'

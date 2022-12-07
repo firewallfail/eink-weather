@@ -150,7 +150,30 @@ def draw_current_weather_tile(current_weather):
     weather_code.grid(row=3, column=0)
 
     half_hour = 30 * 60 * 1000
-    window.after(half_hour, get_current_weather) 
+    window.after(half_hour, get_current_weather)
+
+
+def get_quote():
+    results = requests.get(CONS.QUOTES_API).json()[0]
+    draw_quote_tile(results)
+
+
+def draw_quote_tile(quote):
+    quote_tile = ttk.Frame(window)
+    
+    quote_tile.rowconfigure(0, weight=2)
+    quote_tile.rowconfigure(1, weight=5)
+    quote_tile.grid(row=1, column=1)
+
+    title = ttk.Label(quote_tile, text='Quote')
+    title.grid(row=0, column=0)
+
+    quote = ttk.Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240)
+    quote.grid(row=1, column=0)
+
+
+    next_update = time_to_midnight()
+    window.after(next_update, get_quote)
     
       
 window = Tk()
@@ -162,10 +185,7 @@ window.columnconfigure(2, weight=1)
 get_current_weather()
 get_weather_forecast()
 get_date_stats()
-
-unknown = ttk.Label(window, text="Undecided")
-unknown.grid(row=1, column=1, sticky=N)
-
+get_quote()
 get_sun_stats()
 
 window.geometry("800x480")
