@@ -7,7 +7,7 @@ WEATHER_CODE = {
     0: 'Clear Sky',
     1: 'Mainly Clear',
     2: 'Partly Cloudy',
-    3: 'Overcase',
+    3: 'Overcast',
     45: 'Fog',
     48: 'Depositing Rime Fog',
     51: 'Light Drizzle',

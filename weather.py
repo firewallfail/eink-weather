@@ -108,25 +108,49 @@ def draw_forecast_tiles(next_update, today_forecast, tomorrow_forecast):
 
 
 def draw_forecast_tile(forecast, column, text):
-    today_tile = ttk.Frame(window)
-    today_tile.grid(row=0, column=column)
+    forecast_tile = ttk.Frame(window)
+    forecast_tile.grid(row=0, column=column)
 
-    title = ttk.Label(today_tile, text=text)
+    title = ttk.Label(forecast_tile, text=text)
     title.grid(row=0, column=0)
 
-    temp_high = ttk.Label(today_tile, text=f"High: {forecast['temp_high']}°C")
+    temp_high = ttk.Label(forecast_tile, text=f"High: {forecast['temp_high']}°C")
     temp_high.grid(row=1, column=0)
 
-    temp_low = ttk.Label(today_tile, text=f"Low: {forecast['temp_low']}°C")
+    temp_low = ttk.Label(forecast_tile, text=f"Low: {forecast['temp_low']}°C")
     temp_low.grid(row=2, column=0)
 
-    precip_sum = ttk.Label(today_tile, text=f"Precip: {forecast['precip_sum']}mm")
+    precip_sum = ttk.Label(forecast_tile, text=f"Precip: {forecast['precip_sum']}mm")
     precip_sum.grid(row=3, column=0)
 
-    weather_code = ttk.Label(today_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}")
+    weather_code = ttk.Label(forecast_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}")
     weather_code.grid(row=4, column=0)
 
-    
+
+def get_current_weather():
+    results = requests.get(CONS.CURRENT_WEATHER_API).json().get('current_weather', None)
+    draw_current_weather_tile(results)
+
+
+
+def draw_current_weather_tile(current_weather):
+    current_weather_tile = ttk.Frame(window)
+    current_weather_tile.grid(row=0, column=0)
+
+    title = ttk.Label(current_weather_tile, text='Current Weather')
+    title.grid(row=0, column=0)
+
+    temp = ttk.Label(current_weather_tile, text=f"Temp: {current_weather['temperature']}°C")
+    temp.grid(row=1, column=0)
+
+    wind = ttk.Label(current_weather_tile, text=f"Wind: {current_weather['windspeed']}Km/h")
+    wind.grid(row=2, column=0)
+
+    weather_code = ttk.Label(current_weather_tile, text=f"{CONS.WEATHER_CODE[current_weather['weathercode']]}")
+    weather_code.grid(row=3, column=0)
+
+    half_hour = 30 * 60 * 1000
+    window.after(half_hour, get_current_weather) 
     
       
 window = Tk()
@@ -135,12 +159,8 @@ window.rowconfigure(1, weight=1)
 window.columnconfigure(0, weight=1)
 window.columnconfigure(1, weight=1)
 window.columnconfigure(2, weight=1)
-
-current_weather = ttk.Label(window, text="Current Weather")
-current_weather.grid(row=0, column=0, sticky=N)
-
+get_current_weather()
 get_weather_forecast()
-
 get_date_stats()
 
 unknown = ttk.Label(window, text="Undecided")
