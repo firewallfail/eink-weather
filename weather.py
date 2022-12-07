@@ -100,50 +100,34 @@ def get_weather_forecast():
 
 
 def draw_forecast_tiles(next_update, today_forecast, tomorrow_forecast):
-    draw_today_forecast(today_forecast)
-    draw_tomorrow_forecast(tomorrow_forecast)
+    forecasts = (today_forecast, tomorrow_forecast)
+    titles = ('Today Forecast', 'Tomorrow Forecast')
+    for i in range(2):
+        draw_forecast_tile(forecasts[i], i+1, titles[i])
     window.after(next_update, get_weather_forecast) # once per day
 
 
-def draw_today_forecast(today_forecast):
+def draw_forecast_tile(forecast, column, text):
     today_tile = ttk.Frame(window)
-    today_tile.grid(row=0, column=1)
+    today_tile.grid(row=0, column=column)
 
-    title = ttk.Label(today_tile, text='Today Forecast')
+    title = ttk.Label(today_tile, text=text)
     title.grid(row=0, column=0)
 
-    temp_high = ttk.Label(today_tile, text=f"High: {today_forecast['temp_high']}°C")
+    temp_high = ttk.Label(today_tile, text=f"High: {forecast['temp_high']}°C")
     temp_high.grid(row=1, column=0)
 
-    temp_low = ttk.Label(today_tile, text=f"Low: {today_forecast['temp_low']}°C")
+    temp_low = ttk.Label(today_tile, text=f"Low: {forecast['temp_low']}°C")
     temp_low.grid(row=2, column=0)
 
-    precip_sum = ttk.Label(today_tile, text=f"Precip: {today_forecast['precip_sum']}mm")
+    precip_sum = ttk.Label(today_tile, text=f"Precip: {forecast['precip_sum']}mm")
     precip_sum.grid(row=3, column=0)
 
-    weather_code = ttk.Label(today_tile, text=f"{CONS.WEATHER_CODE[today_forecast['weather_code']]}")
+    weather_code = ttk.Label(today_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}")
     weather_code.grid(row=4, column=0)
 
-
-def draw_tomorrow_forecast(tomorrow_forecast):
-    tomorrow_tile = ttk.Frame(window)
-    tomorrow_tile.grid(row=0, column=2)
-
-    title = ttk.Label(tomorrow_tile, text='Tomorrow Forecast')
-    title.grid(row=0, column=0)
-
-    temp_high = ttk.Label(tomorrow_tile, text=f"High: {tomorrow_forecast['temp_high']}°C")
-    temp_high.grid(row=1, column=0)
-
-    temp_low = ttk.Label(tomorrow_tile, text=f"Low: {tomorrow_forecast['temp_low']}°C")
-    temp_low.grid(row=2, column=0)
-
-    precip_sum = ttk.Label(tomorrow_tile, text=f"Precip: {tomorrow_forecast['precip_sum']}mm")
-    precip_sum.grid(row=3, column=0)
-
-    weather_code = ttk.Label(tomorrow_tile, text=f"{CONS.WEATHER_CODE[tomorrow_forecast['weather_code']]}")
-    weather_code.grid(row=4, column=0)
-
+    
+    
       
 window = Tk()
 window.rowconfigure(0, weight=1)
