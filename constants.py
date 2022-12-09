@@ -2,6 +2,8 @@ WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 
 MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 LAT = 42.9849
 LNG = -81.2453
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 480
 
 WEATHER_CODE = {
     0: 'Clear Sky',
