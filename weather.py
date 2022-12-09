@@ -31,9 +31,9 @@ def draw_sun_stats(next_update, sun_rise, sun_set):
     sun_stats.grid(row=1, column=2)
 
     sunrise = ttk.Label(sun_stats, text=f'Sun Rise: {sun_rise}')
-    sunrise.grid(row=0, column=1, sticky=N)
+    sunrise.grid(row=0, column=1)
     sunset = ttk.Label(sun_stats, text=f'Sun Set: {sun_set}')
-    sunset.grid(row=1, column=1, sticky=N)
+    sunset.grid(row=1, column=1)
 
     window.after(next_update, get_sun_stats) # once per day
 
