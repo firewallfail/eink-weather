@@ -3,7 +3,7 @@ import json
 import time
 import constants as CONS
 
-from tkinter import ttk, Tk, N, S, E, W
+from tkinter import ttk, Tk, N, S, E, W, Frame, Label
 from dateutil import tz
 from datetime import datetime, timedelta
 from random import randint
@@ -27,12 +27,12 @@ def time_to_midnight():
 
 
 def draw_sun_stats(next_update, sun_rise, sun_set):
-    sun_stats = ttk.Frame(window)
+    sun_stats = Frame(window)
     sun_stats.grid(row=1, column=2)
 
-    sunrise = ttk.Label(sun_stats, text=f'Sun Rise: {sun_rise}')
+    sunrise = Label(sun_stats, text=f'Sun Rise: {sun_rise}')
     sunrise.grid(row=0, column=1)
-    sunset = ttk.Label(sun_stats, text=f'Sun Set: {sun_set}')
+    sunset = Label(sun_stats, text=f'Sun Set: {sun_set}')
     sunset.grid(row=1, column=1)
 
     window.after(next_update, get_sun_stats) # once per day
@@ -65,17 +65,17 @@ def get_date_stats():
 
 
 def draw_date_tile(next_update, datestamp):
-    date = ttk.Frame(window)
-    date.grid(row=1, column=0)
-    title = ttk.Label(date, text="Date")
-    title.grid(row=0, column=0)
-    weekday = ttk.Label(date, text=datestamp['weekday'])
+    date = Frame(window)
+    date.grid(row=1, column=0, sticky='nsew')
+    title = Label(date, text="Date")
+    title.grid(row=0, column=1)
+    weekday = Label(date, text=datestamp['weekday'])
     weekday.grid(row=1, column=0)
-    month = ttk.Label(date, text=datestamp['month'])
+    month = Label(date, text=datestamp['month'])
     month.grid(row=2, column=0)
-    day = ttk.Label(date, text=datestamp['day'])
+    day = Label(date, text=datestamp['day'])
     day.grid(row=3, column=0)
-    year = ttk.Label(date, text=datestamp['year'])
+    year = Label(date, text=datestamp['year'])
     year.grid(row=4, column=0)
 
     window.after(next_update, get_date_stats) # once per day
@@ -108,22 +108,22 @@ def draw_forecast_tiles(next_update, today_forecast, tomorrow_forecast):
 
 
 def draw_forecast_tile(forecast, column, text):
-    forecast_tile = ttk.Frame(window)
+    forecast_tile = Frame(window)
     forecast_tile.grid(row=0, column=column)
 
-    title = ttk.Label(forecast_tile, text=text)
+    title = Label(forecast_tile, text=text)
     title.grid(row=0, column=0)
 
-    temp_high = ttk.Label(forecast_tile, text=f"High: {forecast['temp_high']}°C")
+    temp_high = Label(forecast_tile, text=f"High: {forecast['temp_high']}°C")
     temp_high.grid(row=1, column=0)
 
-    temp_low = ttk.Label(forecast_tile, text=f"Low: {forecast['temp_low']}°C")
+    temp_low = Label(forecast_tile, text=f"Low: {forecast['temp_low']}°C")
     temp_low.grid(row=2, column=0)
 
-    precip_sum = ttk.Label(forecast_tile, text=f"Precip: {forecast['precip_sum']}mm")
+    precip_sum = Label(forecast_tile, text=f"Precip: {forecast['precip_sum']}mm")
     precip_sum.grid(row=3, column=0)
 
-    weather_code = ttk.Label(forecast_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}")
+    weather_code = Label(forecast_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}")
     weather_code.grid(row=4, column=0)
 
 
@@ -134,19 +134,19 @@ def get_current_weather():
 
 
 def draw_current_weather_tile(current_weather):
-    current_weather_tile = ttk.Frame(window)
+    current_weather_tile = Frame(window)
     current_weather_tile.grid(row=0, column=0)
 
-    title = ttk.Label(current_weather_tile, text='Current Weather')
+    title = Label(current_weather_tile, text='Current Weather')
     title.grid(row=0, column=0)
 
-    temp = ttk.Label(current_weather_tile, text=f"Temp: {current_weather['temperature']}°C")
+    temp = Label(current_weather_tile, text=f"Temp: {current_weather['temperature']}°C")
     temp.grid(row=1, column=0)
 
-    wind = ttk.Label(current_weather_tile, text=f"Wind: {current_weather['windspeed']}Km/h")
+    wind = Label(current_weather_tile, text=f"Wind: {current_weather['windspeed']}Km/h")
     wind.grid(row=2, column=0)
 
-    weather_code = ttk.Label(current_weather_tile, text=f"{CONS.WEATHER_CODE[current_weather['weathercode']]}")
+    weather_code = Label(current_weather_tile, text=f"{CONS.WEATHER_CODE[current_weather['weathercode']]}")
     weather_code.grid(row=3, column=0)
 
     half_hour = 30 * 60 * 1000
@@ -159,16 +159,16 @@ def get_quote():
 
 
 def draw_quote_tile(quote):
-    quote_tile = ttk.Frame(window)
+    quote_tile = Frame(window)
     
     quote_tile.rowconfigure(0, weight=2)
     quote_tile.rowconfigure(1, weight=5)
     quote_tile.grid(row=1, column=1)
 
-    title = ttk.Label(quote_tile, text='Quote')
+    title = Label(quote_tile, text='Quote')
     title.grid(row=0, column=0)
 
-    quote = ttk.Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240)
+    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240)
     quote.grid(row=1, column=0)
 
 
