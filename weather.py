@@ -168,7 +168,7 @@ def draw_quote_tile(quote):
     title = Label(quote_tile, text='Quote')
     title.grid(row=0, column=0)
 
-    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240)
+    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240, background='pink')
     quote.grid(row=1, column=0)
 
 
@@ -177,11 +177,11 @@ def draw_quote_tile(quote):
     
       
 window = Tk()
-window.rowconfigure(0, weight=1)
-window.rowconfigure(1, weight=1)
-window.columnconfigure(0, weight=1)
-window.columnconfigure(1, weight=1)
-window.columnconfigure(2, weight=1)
+window.rowconfigure(0, minsize=CONS.WINDOW_HEIGHT/2)
+window.rowconfigure(1, minsize=CONS.WINDOW_HEIGHT/2)
+window.columnconfigure(0, minsize=CONS.WINDOW_WIDTH/3)
+window.columnconfigure(1, minsize=CONS.WINDOW_WIDTH/3)
+window.columnconfigure(2, minsize=CONS.WINDOW_WIDTH/3)
 get_current_weather()
 get_weather_forecast()
 get_date_stats()
