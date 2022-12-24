@@ -11,19 +11,14 @@ from random import randint
 
 
 def time_to_local(time):
-    print(time)
+    """
+    Jank solution to time being out of range on rasppi because the api sends
+    time in a weird format with no year and and no way to account for timezone
+    """
+    time = '2022:' + time
     time = time.replace(' ', ':')
-    time = arrow.get(time, 'H:mm:ss:A').to('local').format('H:mm:ss:A')
-    print(time)
-    return time
-    # from_zone = tz.tzutc()
-    # to_zone = tz.tzlocal()
+    return arrow.get(time, 'YYYY:H:mm:ss:A').to('local').format('HH:mm:ss')
 
-    # utc = datetime.strptime(time, '%I:%M:%S %p')
-    # utc = utc.replace(tzinfo=from_zone)
-    # local = utc.astimezone(to_zone)
-
-    return local.strftime('%I:%M:%S %p')
 
 
 def time_to_midnight():
