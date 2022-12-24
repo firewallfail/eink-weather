@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import arrow
 import constants as CONS
 
 from tkinter import ttk, Tk, N, S, E, W, Frame, Label
@@ -10,12 +11,17 @@ from random import randint
 
 
 def time_to_local(time):
-    from_zone = tz.tzutc()
-    to_zone = tz.tzlocal()
+    print(time)
+    time = time.replace(' ', ':')
+    time = arrow.get(time, 'H:mm:ss:A').to('local').format('H:mm:ss:A')
+    print(time)
+    return time
+    # from_zone = tz.tzutc()
+    # to_zone = tz.tzlocal()
 
-    utc = datetime.strptime(time, '%I:%M:%S %p')
-    utc = utc.replace(tzinfo=from_zone)
-    local = utc.astimezone(to_zone)
+    # utc = datetime.strptime(time, '%I:%M:%S %p')
+    # utc = utc.replace(tzinfo=from_zone)
+    # local = utc.astimezone(to_zone)
 
     return local.strftime('%I:%M:%S %p')
 
@@ -67,19 +73,19 @@ def get_date_stats():
 def draw_date_tile(next_update, datestamp):
     date = Frame(window, borderwidth=2, relief='solid')
     date.grid(row=1, column=0, sticky='nsew')
-    date.columnconfigure(0, weight=1)
-    date.columnconfigure(1, weight=8)
-    date.columnconfigure(2, weight=1)
+    for i in range(10):
+        date.columnconfigure(i, weight=1)
+        date.rowconfigure(i, weight=1)
     title = Label(date, text="Date")
-    title.grid(row=0, column=1)
+    title.grid(row=0, column=2)
     weekday = Label(date, text=datestamp['weekday'])
-    weekday.grid(row=1, column=1)
+    weekday.grid(row=1, column=2)
     month = Label(date, text=datestamp['month'])
-    month.grid(row=2, column=1)
+    month.grid(row=2, column=2)
     day = Label(date, text=datestamp['day'])
-    day.grid(row=3, column=1)
+    day.grid(row=3, column=2)
     year = Label(date, text=datestamp['year'])
-    year.grid(row=4, column=1)
+    year.grid(row=4, column=2)
 
     window.after(next_update, get_date_stats) # once per day
 
