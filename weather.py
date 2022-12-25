@@ -2,6 +2,7 @@ import requests
 import json
 import time
 import arrow
+import scree_lib.eink as eink
 
 import constants as CONS
 
@@ -10,6 +11,7 @@ from dateutil import tz
 from datetime import datetime, timedelta
 from random import randint
 from PIL import ImageGrab
+
 
 
 def time_to_local(time):
