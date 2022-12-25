@@ -205,7 +205,6 @@ try:
     epd.init()
     epd.Clear()
     epd.display(epd.getbuffer(im))
-    time.sleep(15)
     epd.Clear()
     epd.sleep()
 except:
