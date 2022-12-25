@@ -169,7 +169,7 @@ def draw_quote_tile(quote):
     title = Label(quote_tile, text='Quote')
     title.grid(row=0, column=0)
 
-    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240, background='pink')
+    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240)
     quote.grid(row=1, column=0)
 
 
