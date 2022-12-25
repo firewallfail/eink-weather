@@ -11,7 +11,7 @@ from tkinter import ttk, Tk, N, S, E, W, Frame, Label
 from dateutil import tz
 from datetime import datetime, timedelta
 from random import randint
-from PIL import ImageGrab
+from PIL import ImageGrab, ImageDraw
 
 
 
@@ -194,12 +194,16 @@ get_date_stats()
 get_quote()
 get_sun_stats()
 
+im = ImageGrab.grab(bbox=(10,10,500,500))
+
 try:
     logging.info("eink test")
     epd = eink.EPD()
     
     logging.info("init and Clear")
     epd.init()
+    epd.Clear()
+    epd.display(epd.getbuffer(im))
     epd.Clear()
     epd.sleep()
 except:
