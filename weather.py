@@ -2,12 +2,14 @@ import requests
 import json
 import time
 import arrow
+
 import constants as CONS
 
 from tkinter import ttk, Tk, N, S, E, W, Frame, Label
 from dateutil import tz
 from datetime import datetime, timedelta
 from random import randint
+from PIL import ImageGrab
 
 
 def time_to_local(time):
