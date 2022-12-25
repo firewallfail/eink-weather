@@ -3,6 +3,7 @@ import json
 import time
 import arrow
 import logging
+import time
 import scree_lib.eink as eink
 
 import constants as CONS
@@ -204,6 +205,7 @@ try:
     epd.init()
     epd.Clear()
     epd.display(epd.getbuffer(im))
+    time.sleep(15)
     epd.Clear()
     epd.sleep()
 except:
