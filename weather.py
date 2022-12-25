@@ -2,6 +2,7 @@ import requests
 import json
 import time
 import arrow
+import logging
 import scree_lib.eink as eink
 
 import constants as CONS
@@ -192,6 +193,18 @@ get_weather_forecast()
 get_date_stats()
 get_quote()
 get_sun_stats()
+
+try:
+    logging.info("eink test")
+    epd = eink.EPD()
+    
+    logging.info("init and Clear")
+    epd.init()
+    epd.Clear()
+    epd.sleep()
+except:
+    logging.warning('failed')
+
 
 window.geometry("800x480")
 window.mainloop()
