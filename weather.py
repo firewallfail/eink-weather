@@ -195,17 +195,17 @@ def draw_to_eink(first_pass=False):
     im = ImageGrab.grab(bbox=(2,66,802,546))
 
     try:
-        logging.info("eink test")
+        print('enable eink')
         epd = eink.EPD()
         
-        logging.info("init and Clear")
+        print('init and clear eink')
         epd.init()
         epd.Clear()
         epd.display(epd.getbuffer(im))
-        # epd.Clear()
         epd.sleep()
+        print('draw to eink then sleep')
     except:
-        logging.warning('failed')
+        print('eink failed')
     half_hour = 30 * 60 * 1000
     window.after(half_hour, draw_to_eink)
     
