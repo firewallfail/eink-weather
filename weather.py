@@ -4,7 +4,7 @@ import time
 import arrow
 import logging
 import time
-import scree_lib.eink as eink
+import sys
 
 import constants as CONS
 
@@ -14,7 +14,12 @@ from datetime import datetime, timedelta
 from random import randint
 from PIL import ImageGrab, ImageDraw
 
-
+# jank solution to disable eink
+try:
+    sys.argv[1]
+    import scree_lib.eink as eink
+except:
+    print('eink disabled')
 
 def time_to_local(time):
     """
@@ -216,7 +221,12 @@ get_weather_forecast()
 get_date_stats()
 get_quote()
 get_sun_stats()
-draw_to_eink(first_pass=True)
+
+try:
+    sys.argv[1]
+    draw_to_eink(first_pass=True)
+except:
+    print('eink disabled')
 
 window.geometry("800x480")
 window.mainloop()
