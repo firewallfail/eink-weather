@@ -195,7 +195,7 @@ get_date_stats()
 get_quote()
 get_sun_stats()
 
-im = ImageGrab.grab(bbox=(0,0,800,480))
+im = ImageGrab.grab(bbox=(0,60,800,540))
 
 try:
     logging.info("eink test")
