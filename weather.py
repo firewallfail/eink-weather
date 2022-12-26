@@ -182,8 +182,11 @@ def draw_quote_tile(quote):
     next_update = time_to_midnight()
     window.after(next_update, get_quote)
 
-def draw_to_eink():
-    im = ImageGrab.grab(bbox=(0,60,800,540))
+def draw_to_eink(first_pass=False):
+    if first_pass:
+        # do nothing on first pass
+        window.after(10000, draw_to_eink)
+    im = ImageGrab.grab(bbox=(2,66,802,546))
 
     try:
         logging.info("eink test")
@@ -197,6 +200,8 @@ def draw_to_eink():
         epd.sleep()
     except:
         logging.warning('failed')
+    half_hour = 30 * 60 * 1000
+    window.after(half_hour, draw_to_eink)
     
       
 window = Tk()
@@ -210,7 +215,7 @@ get_weather_forecast()
 get_date_stats()
 get_quote()
 get_sun_stats()
-draw_to_eink()
+draw_to_eink(first_pass=True)
 
 window.geometry("800x480")
 window.mainloop()
