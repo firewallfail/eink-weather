@@ -186,6 +186,7 @@ def draw_to_eink(first_pass=False):
     if first_pass:
         # do nothing on first pass
         window.after(10000, draw_to_eink)
+        return
     im = ImageGrab.grab(bbox=(2,66,802,546))
 
     try:
