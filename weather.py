@@ -42,6 +42,21 @@ def draw_sun_stats(next_update, sun_rise, sun_set):
     sunset = Label(sun_stats, text=f'Sun Set: {sun_set}')
     sunset.grid(row=1, column=1)
 
+    im = ImageGrab.grab(bbox=(0,60,800,540))
+
+    try:
+        logging.info("eink test")
+        epd = eink.EPD()
+        
+        logging.info("init and Clear")
+        epd.init()
+        epd.Clear()
+        epd.display(epd.getbuffer(im))
+        # epd.Clear()
+        epd.sleep()
+    except:
+        logging.warning('failed')
+
     window.after(next_update, get_sun_stats) # once per day
 
 
@@ -194,22 +209,6 @@ get_weather_forecast()
 get_date_stats()
 get_quote()
 get_sun_stats()
-
-im = ImageGrab.grab(bbox=(0,60,800,540))
-
-try:
-    logging.info("eink test")
-    epd = eink.EPD()
-    
-    logging.info("init and Clear")
-    epd.init()
-    epd.Clear()
-    epd.display(epd.getbuffer(im))
-    epd.Clear()
-    epd.sleep()
-except:
-    logging.warning('failed')
-
 
 window.geometry("800x480")
 window.mainloop()
