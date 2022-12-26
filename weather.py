@@ -39,12 +39,12 @@ def time_to_midnight():
 
 
 def draw_sun_stats(next_update, sun_rise, sun_set):
-    sun_stats = Frame(window, borderwidth=2, relief='solid')
+    sun_stats = Frame(window, borderwidth=2, relief='solid', bg='white')
     sun_stats.grid(row=1, column=2, sticky='nsew')
 
-    sunrise = Label(sun_stats, text=f'Sun Rise: {sun_rise}')
+    sunrise = Label(sun_stats, text=f'Sun Rise: {sun_rise}', bg='white')
     sunrise.grid(row=0, column=1)
-    sunset = Label(sun_stats, text=f'Sun Set: {sun_set}')
+    sunset = Label(sun_stats, text=f'Sun Set: {sun_set}', bg='white')
     sunset.grid(row=1, column=1)
 
     window.after(next_update, get_sun_stats) # once per day
@@ -77,20 +77,20 @@ def get_date_stats():
 
 
 def draw_date_tile(next_update, datestamp):
-    date = Frame(window, borderwidth=2, relief='solid')
+    date = Frame(window, borderwidth=2, relief='solid', bg='white')
     date.grid(row=1, column=0, sticky='nsew')
     for i in range(10):
         date.columnconfigure(i, weight=1)
         date.rowconfigure(i, weight=1)
-    title = Label(date, text="Date")
+    title = Label(date, text="Date", bg='white')
     title.grid(row=0, column=2)
-    weekday = Label(date, text=datestamp['weekday'])
+    weekday = Label(date, text=datestamp['weekday'], bg='white')
     weekday.grid(row=1, column=2)
-    month = Label(date, text=datestamp['month'])
+    month = Label(date, text=datestamp['month'], bg='white')
     month.grid(row=2, column=2)
-    day = Label(date, text=datestamp['day'])
+    day = Label(date, text=datestamp['day'], bg='white')
     day.grid(row=3, column=2)
-    year = Label(date, text=datestamp['year'])
+    year = Label(date, text=datestamp['year'], bg='white')
     year.grid(row=4, column=2)
 
     window.after(next_update, get_date_stats) # once per day
@@ -123,22 +123,22 @@ def draw_forecast_tiles(next_update, today_forecast, tomorrow_forecast):
 
 
 def draw_forecast_tile(forecast, column, text):
-    forecast_tile = Frame(window, borderwidth=2, relief='solid')
+    forecast_tile = Frame(window, borderwidth=2, relief='solid', bg='white')
     forecast_tile.grid(row=0, column=column, sticky='nsew')
 
-    title = Label(forecast_tile, text=text)
+    title = Label(forecast_tile, text=text, bg='white')
     title.grid(row=0, column=0)
 
-    temp_high = Label(forecast_tile, text=f"High: {forecast['temp_high']}°C")
+    temp_high = Label(forecast_tile, text=f"High: {forecast['temp_high']}°C", bg='white')
     temp_high.grid(row=1, column=0)
 
-    temp_low = Label(forecast_tile, text=f"Low: {forecast['temp_low']}°C")
+    temp_low = Label(forecast_tile, text=f"Low: {forecast['temp_low']}°C", bg='white')
     temp_low.grid(row=2, column=0)
 
-    precip_sum = Label(forecast_tile, text=f"Precip: {forecast['precip_sum']}mm")
+    precip_sum = Label(forecast_tile, text=f"Precip: {forecast['precip_sum']}mm", bg='white')
     precip_sum.grid(row=3, column=0)
 
-    weather_code = Label(forecast_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}")
+    weather_code = Label(forecast_tile, text=f"{CONS.WEATHER_CODE[forecast['weather_code']]}", bg='white')
     weather_code.grid(row=4, column=0)
 
 
@@ -149,19 +149,19 @@ def get_current_weather():
 
 
 def draw_current_weather_tile(current_weather):
-    current_weather_tile = Frame(window, borderwidth=2, relief='solid')
+    current_weather_tile = Frame(window, borderwidth=2, relief='solid', bg='white')
     current_weather_tile.grid(row=0, column=0, sticky='nsew')
 
-    title = Label(current_weather_tile, text='Current Weather')
+    title = Label(current_weather_tile, text='Current Weather', bg='white')
     title.grid(row=0, column=0)
 
-    temp = Label(current_weather_tile, text=f"Temp: {current_weather['temperature']}°C")
+    temp = Label(current_weather_tile, text=f"Temp: {current_weather['temperature']}°C", bg='white')
     temp.grid(row=1, column=0)
 
-    wind = Label(current_weather_tile, text=f"Wind: {current_weather['windspeed']}Km/h")
+    wind = Label(current_weather_tile, text=f"Wind: {current_weather['windspeed']}Km/h", bg='white')
     wind.grid(row=2, column=0)
 
-    weather_code = Label(current_weather_tile, text=f"{CONS.WEATHER_CODE[current_weather['weathercode']]}")
+    weather_code = Label(current_weather_tile, text=f"{CONS.WEATHER_CODE[current_weather['weathercode']]}", bg='white')
     weather_code.grid(row=3, column=0)
 
     half_hour = 30 * 60 * 1000
@@ -174,13 +174,13 @@ def get_quote():
 
 
 def draw_quote_tile(quote):
-    quote_tile = Frame(window, borderwidth=2, relief='solid')
+    quote_tile = Frame(window, borderwidth=2, relief='solid', bg='white')
     quote_tile.grid(row=1, column=1, sticky='nsew')
 
-    title = Label(quote_tile, text='Quote')
+    title = Label(quote_tile, text='Quote', bg='white')
     title.grid(row=0, column=0)
 
-    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240)
+    quote = Label(quote_tile, text=f"{quote['q']}\n-{quote['a']}", wraplength=240, bg='white')
     quote.grid(row=1, column=0)
 
 
