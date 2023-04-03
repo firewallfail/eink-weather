@@ -97,6 +97,7 @@ $(document).ready(() => {
             })
             .catch((err) => {
                 console.log(err)
+                setTimeout(getDailyQuote, REFRESH_AFTER_ERROR)
             })
     }
     const getForecast = () => {
