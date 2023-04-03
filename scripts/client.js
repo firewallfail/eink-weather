@@ -57,10 +57,7 @@ $(document).ready(() => {
 
     const currentDate = () => {
         let now = new Date()
-        $("#weekday").text(`${WEEKDAYS[now.getDay()]}`)
-        $("#month").text(`${MONTHS[now.getMonth()]}`)
-        $("#day").text(`${now.getDate()}`)
-        $("#year").text(`${now.getFullYear()}`)
+        $("#fullDate").text(`${WEEKDAYS[now.getDay()]} ${MONTHS[now.getMonth()]} ${now.getDate()} ${now.getFullYear()}`)
     }
     currentDate()
 
