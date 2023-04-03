@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+}
+
+p {
+    margin: 0;
+    width: 100%;
+    margin-left: 2px;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    color: #000000;
+    background-color: #ffffff;
+    font-size: 24px;
+    font-family: 'Source Sans Pro', sans-serif;
+    width: 800px;
+    height: 480px;
+  }
+
+p.title {
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.cell {
+    display: flex;
+    flex-wrap: wrap;
+    width: 33.33%;
+    height: 50%;
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: -2px;
+}
+
+#currentWeather {
+    border-right-style: hidden;
+}
+
+#date {
+    border-right-style: hidden;
+    border-top-style: hidden;
+}
+
+#quote {
+    border-top-style: hidden;
+    border-right-style: hidden;
+}
+
+#sunSetRise {
+    border-top-style: hidden;
+}
+
+#todayForecast {
+    border-right-style: hidden;
+}
