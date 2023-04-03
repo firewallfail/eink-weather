@@ -46,7 +46,7 @@ $(document).ready(() => {
     const getRandomInt = max => {
         return Math.floor(Math.random() * max);
     }
-    
+
     const millisecondsToMidnight = () => {
         let now = new Date()
         let midnight = new Date(now)
@@ -61,7 +61,6 @@ $(document).ready(() => {
         $("#month").text(`${MONTHS[now.getMonth()]}`)
         $("#day").text(`${now.getDate()}`)
         $("#year").text(`${now.getFullYear()}`)
-        setTimeout(currentDate, millisecondsToMidnight())
     }
     currentDate()
 
@@ -83,6 +82,7 @@ $(document).ready(() => {
     getCurrentWeather()
 
     const getForecast = () => {
+        currentDate()
         $.ajax(WEATHER_FORECAST_API, { method: 'GET' })
             .then((res) => {
                 let forecast = res.daily
@@ -101,6 +101,8 @@ $(document).ready(() => {
                 // sunrise and sunset
                 $("#sunRise").text(`Rise: ${sunrise}`)
                 $("#sunSet").text(`Set: ${sunset}`)
+                // update last refresh
+                $("#lastRefresh").text(`Refreshed: ${new Date().toLocaleTimeString('en-us', { hour12: false })}`)
                 setTimeout(getForecast, millisecondsToMidnight())
             })
             .catch((err) => {
