@@ -43,6 +43,10 @@ const CURRENT_WEATHER_API = `https://api.open-meteo.com/v1/forecast?latitude=${L
 const QUOTES_API = 'https://type.fit/api/quotes'
 
 $(document).ready(() => {
+    const getRandomInt = max => {
+        return Math.floor(Math.random() * max);
+    }
+    
     const millisecondsToMidnight = () => {
         let now = new Date()
         let midnight = new Date(now)
@@ -110,10 +114,12 @@ $(document).ready(() => {
     const getDailyQuote = () => {
         $.ajax(QUOTES_API, { method: 'GET' })
             .then((res) => {
-                data = JSON.parse(res)
+                let data = JSON.parse(res)
+                let dataLength = data.length
                 let quote = ''
                 for (i in data) {
-                    quote = `${data[i].text}\n-${data[i].author}`
+                    let randomInt = getRandomInt(dataLength)
+                    quote = `${data[randomInt].text}\n-${data[randomInt].author}`
                     if (quote.length < 120) {
                         break
                     } else {
