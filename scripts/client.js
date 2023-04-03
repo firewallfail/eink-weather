@@ -5,6 +5,11 @@ const LNG = -81.2453
 const WINDOW_WIDTH = 800
 const WINDOW_HEIGHT = 480
 
+// 10 minute offset for refreshes to ensure api calls don't get stale data
+const TIME_OFFSET = 1000 * 60 * 10
+const REFRESH_AFTER_ERROR = 1000 * 60 * 5
+const MINUTES_15 = 1000 * 60 * 15
+
 const WEATHER_CODE = {
     0: 'Clear Sky',
     1: 'Mainly Clear',
@@ -42,7 +47,7 @@ $(document).ready(() => {
         let now = new Date()
         let midnight = new Date(now)
         midnight.setHours(24, 0, 0, 0)
-        console.log(midnight - now)
+        return midnight - now + TIME_OFFSET
     }
     millisecondsToMidnight()
 
@@ -52,18 +57,23 @@ $(document).ready(() => {
         $("#month").text(`${MONTHS[now.getMonth()]}`)
         $("#day").text(`${now.getDate()}`)
         $("#year").text(`${now.getFullYear()}`)
-        console.log('hello')
-        setTimeout(currentDate, 1000)
+        setTimeout(currentDate, millisecondsToMidnight())
     }
     currentDate()
 
     const getCurrentWeather = () => {
         $.ajax(CURRENT_WEATHER_API, { method: 'GET' })
             .then((res) => {
-                console.log(res.current_weather)
+                let weather = res.current_weather
+                $("#temp").text(`Temp: ${weather.temperature} \u00B0C`)
+                $("#wind").text(`Wind: ${weather.windspeed} km/h`)
+                $("#weatherCode").text(`${WEATHER_CODE[weather.weathercode]}`)
+                $("#lastRefresh").text(`Refreshed: ${new Date().toLocaleTimeString('en-us', { hour12: false })}`)
+                setTimeout(getCurrentWeather, MINUTES_15)
             })
             .catch((err) => {
                 console.log(err)
+                setTimeout(getCurrentWeather, REFRESH_AFTER_ERROR)
             })
     }
     getCurrentWeather()
@@ -71,10 +81,27 @@ $(document).ready(() => {
     const getForecast = () => {
         $.ajax(WEATHER_FORECAST_API, { method: 'GET' })
             .then((res) => {
-                console.log(res)
+                let forecast = res.daily
+                let sunrise = new Date(forecast.sunrise[0]).toLocaleTimeString('en-us', { hour12: false })
+                let sunset = new Date(forecast.sunset[0]).toLocaleTimeString('en-us', { hour12: false })
+                // today forecast
+                $("#todayHigh").text(`High: ${forecast.apparent_temperature_max[0]} \u00B0C`)
+                $("#todayLow").text(`Low: ${forecast.apparent_temperature_min[0]} \u00B0C`)
+                $("#todayPrecip").text(`Precip: ${forecast.precipitation_sum[0]} mm`)
+                $("#todayCode").text(`${WEATHER_CODE[forecast.weathercode[0]]}`)
+                // tomorrow forecast
+                $("#tomorrowHigh").text(`High: ${forecast.apparent_temperature_max[1]} \u00B0C`)
+                $("#tomorrowLow").text(`Low: ${forecast.apparent_temperature_min[1]} \u00B0C`)
+                $("#tomorrowPrecip").text(`Precip: ${forecast.precipitation_sum[1]} mm`)
+                $("#tomorrowCode").text(`${WEATHER_CODE[forecast.weathercode[1]]}`)
+                // sunrise and sunset
+                $("#sunRise").text(`Rise: ${sunrise}`)
+                $("#sunSet").text(`Set: ${sunset}`)
+                setTimeout(getForecast, millisecondsToMidnight())
             })
             .catch((err) => {
                 console.log(err)
+                setTimeout(getForecast, REFRESH_AFTER_ERROR)
             })
     }
     getForecast()
@@ -83,11 +110,22 @@ $(document).ready(() => {
     const getDailyQuote = () => {
         $.ajax(QUOTES_API, { method: 'GET' })
             .then((res) => {
-                data = JSON.parse(res)[0]
-                $("#quoteText").text(`${data.text}\n-${data.author}`)
+                data = JSON.parse(res)
+                let quote = ''
+                for (i in data) {
+                    quote = `${data[i].text}\n-${data[i].author}`
+                    if (quote.length < 120) {
+                        break
+                    } else {
+                        quote = 'All quotes too long'
+                    }
+                }
+                $("#quoteText").text(`${quote}`)
+                setTimeout(getDailyQuote, millisecondsToMidnight())
             })
             .catch((err) => {
                 console.log(err)
+                setTimeout(getDailyQuote, REFRESH_AFTER_ERROR)
             })
     }
     getDailyQuote()
