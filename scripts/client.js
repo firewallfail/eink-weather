@@ -81,8 +81,30 @@ $(document).ready(() => {
     }
     getCurrentWeather()
 
+    const getDailyQuote = () => {
+        $.ajax(QUOTES_API, { method: 'GET' })
+            .then((res) => {
+                let data = JSON.parse(res)
+                let dataLength = data.length
+                let quote = ''
+                for (i in data) {
+                    let randomInt = getRandomInt(dataLength)
+                    quote = `${data[randomInt].text}\n-${data[randomInt].author}`
+                    if (quote.length < 120) {
+                        break
+                    } else {
+                        quote = 'All quotes too long'
+                    }
+                }
+                $("#quoteText").text(`${quote}`)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     const getForecast = () => {
         currentDate()
+        getDailyQuote()
         $.ajax(WEATHER_FORECAST_API, { method: 'GET' })
             .then((res) => {
                 let forecast = res.daily
@@ -111,31 +133,5 @@ $(document).ready(() => {
             })
     }
     getForecast()
-
-    
-    const getDailyQuote = () => {
-        $.ajax(QUOTES_API, { method: 'GET' })
-            .then((res) => {
-                let data = JSON.parse(res)
-                let dataLength = data.length
-                let quote = ''
-                for (i in data) {
-                    let randomInt = getRandomInt(dataLength)
-                    quote = `${data[randomInt].text}\n-${data[randomInt].author}`
-                    if (quote.length < 120) {
-                        break
-                    } else {
-                        quote = 'All quotes too long'
-                    }
-                }
-                $("#quoteText").text(`${quote}`)
-                setTimeout(getDailyQuote, millisecondsToMidnight())
-            })
-            .catch((err) => {
-                console.log(err)
-                setTimeout(getDailyQuote, REFRESH_AFTER_ERROR)
-            })
-    }
-    getDailyQuote()
 })
 
