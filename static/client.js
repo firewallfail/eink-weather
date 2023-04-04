@@ -86,14 +86,14 @@ $(document).ready(() => {
                 let quote = ''
                 for (i in data) {
                     let randomInt = getRandomInt(dataLength)
-                    quote = `${data[randomInt].text}\n-${data[randomInt].author}`
+                    quote = `${data[randomInt].text}<br>-${data[randomInt].author}`
                     if (quote.length < 120) {
                         break
                     } else {
                         quote = 'All quotes too long'
                     }
                 }
-                $("#quoteText").text(`${quote}`)
+                $("#quoteText").html(`${quote}`)
             })
             .catch((err) => {
                 console.log(err)
